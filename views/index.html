@@ -1,0 +1,163 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouDownloader</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Khula&display=swap" rel="stylesheet">
+    <style>
+        #center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #logo {
+            font-size: 5.5vh;
+            font-family: 'Righteous', cursive;
+            text-shadow: 3px 3px rgb(241, 169, 62);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #form {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Khula', sans-serif;
+            font-size: 3vh;
+        }
+
+        .txtinput {
+            outline: none;
+            border: 0;
+            font-size: 2.2vh;
+            font-family: 'Khula', sans-serif;
+            border-bottom: 2px solid black;
+        }
+
+        .btn {
+            margin-top: 20px;
+            outline: 0;
+            border: 0;
+            font-size: 3vh;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 7px;
+            background-color: rgba(241, 156, 28, 0.918);
+            transition: transform 300ms ease;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background-color: rgb(247, 155, 17);
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: translateX(-3%);
+        }
+
+        span {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        select {
+            margin-top: 10px;
+            outline: none;
+            border: 0;
+            border-bottom: 2px solid black;
+            font-size: 2.5vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="center">
+        <div id="logo">YouDownloader</div>
+        <div id="form">
+            <span>Video URL: </span>
+            <br>
+            <input class="txtinput" type="text" name="vidurl" id="vidurl">
+            <br>
+            <br>
+            <span>Format:</span>
+            <br>
+            <select name="format" id="format">
+                <option value="mp3">MP3</option>
+                <option value="wav">WAV</option>
+                <option value="vorbis">OGG</option>
+                <option value="m4a">M4A</option>
+                <option value="flac">FLAC</option>
+            </select>
+            <br>
+            <button class="btn" id="downloadbtn">Download</button>
+        </div>
+    </div>
+</body>
+<script>
+    function download_audio() {
+        let input = document.getElementById("vidurl");
+        let format = document.getElementById("format");
+        let url = input.value;
+        if (url === "" || url == undefined) {
+            input.setCustomValidity("Video URL cannnot be empty");
+            input.reportValidity();
+            setTimeout(function () {
+                input.setCustomValidity("");
+                input.reportValidity();
+            }, 2500);
+        }
+        else {
+            this.disabled = true;
+            input.disabled = true;
+            format.disabled = true;
+            fetch("/convert", {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "url": url, "format": format.value })
+            }).then(response => response.json()).then(data => {
+                if (data.response === "ok") {
+                    let dw = document.createElement("a");
+                    dw.href = data.audiourl;
+                    dw.setAttribute("download", data.filename);
+                    dw.click();
+                }
+                else if (data.response === "downloaderror") {
+                    alert(input);
+                    input.setCustomValidity("An error occoured while converting (check yor url)");
+                    input.reportValidity();
+                    setTimeout(() => {
+                        input.setCustomValidity("");
+                        input.reportValidity();
+                    }, 2500);
+                }
+                this.disabled = false;
+                input.disabled = false;
+                format.disabled = false;
+            });
+        }
+    }
+    document.getElementById("downloadbtn").addEventListener("click", download_audio);
+</script>
+
+</html>
