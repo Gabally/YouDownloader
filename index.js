@@ -23,7 +23,7 @@ function random_string(length) {
 }
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 app.post("/convert", (req, res) => {
@@ -59,7 +59,7 @@ app.get("/songs/:fname", (req, res) => {
 });
 
 app.get("/favicon.ico", (req, res) => {
-    res.sendFile(path.join(__dirname, "favicon.ico"));
+    res.sendFile(path.join(__dirname,  "public", "favicon.ico"));
 });
 
 console.log("Now listening on port " + port + "....");
