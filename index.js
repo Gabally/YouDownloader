@@ -32,6 +32,7 @@ app.post("/convert", (req, res) => {
     if (request.url !== undefined && request.url !== "" && request.format !== undefined && request.format !== "" && supported_formats.includes(request.format)) {
         youtubedl.exec(request.url, ["--extract-audio", "--audio-format", request.format, "--output", __dirname + "/songs/" + "%(title)s.%(ext)s"], {}, function (err, output) {
             if (err) {
+                console.log(err);
                 res.send(JSON.stringify({ "response": "downloaderror" }));
             }
             else {
