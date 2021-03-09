@@ -63,5 +63,7 @@ app.get("/favicon.ico", (req, res) => {
     res.sendFile(path.join(__dirname,  "public", "favicon.ico"));
 });
 
+app.use("/public", express.static(path.join(__dirname, "public")));
+
 console.log("Now listening on port " + port + "....");
 const server = app.listen(port);
