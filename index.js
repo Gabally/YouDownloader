@@ -12,16 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
-function random_string(length) {
-    var result = "";
-    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
 });
@@ -42,7 +32,10 @@ app.post("/convert", (req, res) => {
                         outfname = path.basename(e.replace("[ffmpeg] Destination: ", ""));
                     }
                 });
-                res.send(JSON.stringify({ "response": "ok", "audiourl": ("/songs/" + outfname), "filename": outfname }));
+                let filePath = path.join(__dirname, "songs", outfname);
+                let songContent = fs.readFileSync(filePath);
+                fs.unlink(filePath, (e) => { if (e) { console.log("Failed to delete file"); } });
+                res.send(JSON.stringify({ "response": "ok", "audiourl": songContent.toString("base64"), "filename": outfname }));
             }
         })
     }
@@ -51,6 +44,7 @@ app.post("/convert", (req, res) => {
     }
 });
 
+/*
 app.get("/songs/:fname", (req, res) => {
     let fn = req.params["fname"];
     let filePath = path.join(__dirname, "songs", fn);
@@ -58,6 +52,7 @@ app.get("/songs/:fname", (req, res) => {
         fs.unlink(filePath, (e) => { if (e) { console.log("Failed to delete file"); } });
     });
 });
+*/
 
 app.get("/favicon.ico", (req, res) => {
     res.sendFile(path.join(__dirname,  "public", "favicon.ico"));

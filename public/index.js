@@ -24,7 +24,7 @@ function download_audio() {
         }).then(response => response.json()).then(data => {
             if (data.response === "ok") {
                 let dw = document.createElement("a");
-                dw.href = data.audiourl;
+                dw.href = "data:application/octet-stream;base64," + data.audiourl;
                 dw.setAttribute("download", data.filename);
                 dw.click();
             }
