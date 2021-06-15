@@ -44,16 +44,6 @@ app.post("/convert", (req, res) => {
     }
 });
 
-/*
-app.get("/songs/:fname", (req, res) => {
-    let fn = req.params["fname"];
-    let filePath = path.join(__dirname, "songs", fn);
-    res.download(filePath, fn, { dotfiles: "deny" }, function (err) {
-        fs.unlink(filePath, (e) => { if (e) { console.log("Failed to delete file"); } });
-    });
-});
-*/
-
 app.get("/favicon.ico", (req, res) => {
     res.sendFile(path.join(__dirname,  "public", "favicon.ico"));
 });

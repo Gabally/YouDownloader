@@ -1,0 +1,26 @@
+name: Deploy to server
+on: [push]
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: copying new files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          source: "./*"
+          target: ${{ secrets.TARGET_FOLDER }}
+          rm: true
+          strip_components: 1
+      - name: Reloading app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd ${{ secrets.TARGET_FOLDER }} && npm install && echo '{"port":7777}' > config.json && forever stop index.js && forever start index.js 
