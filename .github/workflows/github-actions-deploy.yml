@@ -23,4 +23,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script: source ~/.bashrc && cd ${{ secrets.TARGET_FOLDER }} && npm install && echo '{"port":7777}' > config.json && pm2 restart YouDownloader
+          script: whoami
