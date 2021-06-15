@@ -18,7 +18,8 @@ jobs:
       - name: Reloading app
         uses: fifsky/ssh-action@master
         with:
-          command: bash -c "cd ${{ secrets.TARGET_FOLDER }} && ~/.nvm/versions/node/v14.16.0/bin/npm install && pm2 restart YouDownloader"
+          command: cd ${{ secrets.TARGET_FOLDER }} && npm install && echo '{"port":7777}' > config.json && pm2 restart YouDownloader
           host: ${{ secrets.HOST }}
           user: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
+          args: "-tt"
