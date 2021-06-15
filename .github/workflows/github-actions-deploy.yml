@@ -12,7 +12,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-          source: "./*"
+          source: "*"
           target: ${{ secrets.TARGET_FOLDER }}
           rm: true
           strip_components: 1
